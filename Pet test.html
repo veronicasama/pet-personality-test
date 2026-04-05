@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐾 宠物性格测试 - 发现你毛孩子真实的一面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .pet-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .question {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f5f5ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .progress-text {
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5ff;
+        }
+
+        .test-card {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-icon {
+            font-size: 30px;
+        }
+
+        .test-steps {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .test-steps h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .test-steps ol {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+
+        .test-observation {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .test-observation h4 {
+            color: #ff9800;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .test-observation p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .result-type {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .result-summary {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .dimension-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .dimension-title {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .dimension-result {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .dimension-explanation {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .comparison-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+
+        .comparison-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .comparison-label {
+            font-size: 16px;
+            color: #666;
+            flex: 1;
+        }
+
+        .comparison-values {
+            display: flex;
+            gap: 10px;
+            flex: 2;
+            justify-content: flex-end;
+        }
+
+        .comparison-box {
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .prediction-box {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .actual-box {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .comparison-box.match {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .comparison-box.different {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .share-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .share-quote {
+            font-size: 20px;
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .share-type {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .share-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .share-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid white;
+            background: transparent;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .insight-box {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .insight-title {
+            font-size: 18px;
+            color: #388e3c;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .insight-text {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .test-start {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .test-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .emoji-row {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .intro-text {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .feature-list {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .feature-item {
+            padding: 15px;
+            background: #f5f5ff;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .feature-icon {
+            font-size: 30px;
+        }
+
+        .feature-text {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .cta-text {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .btn-white {
+            background: white;
+            color: #667eea;
+            border: none;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .host-guide {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .host-guide h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .host-guide ol {
+            color: #555;
+            font-size: 14px;
+            line-height: 2;
+            padding-left: 20px;
+        }
+
+        .host-guide a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .online-platforms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .platform-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .platform-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .platform-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .platform-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .platform-desc {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .platform-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .platform-link:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 30px 20px;
+            }
+
+            .result-type {
+                font-size: 26px;
+            }
+
+            .comparison-values {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .share-actions {
+                flex-direction: column;
+            }
+
+            .online-platforms {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header" id="header">
+            <div class="pet-icon" id="headerIcon">🐾</div>
+            <h1 id="headerTitle">宠物性格测试</h1>
+            <p id="headerSubtitle">发现你毛孩子真实的一面</p>
+        </div>
+
+        <div class="content">
+            <div class="progress-bar" id="progressBar" style="display: none;">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText" style="display: none;"></div>
+
+            <div class="step active" id="introStep">
+                <div class="emoji-row">🐕 🐈 🐰 🐹</div>
+                <p class="intro-text">
+                    你真的了解你的宠物吗？<br>
+                    这个测试将通过12个简单的行为实验，<br>
+                    帮助你发现毛孩子真实的性格特点。
+                </p>
+
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-icon">🎯</span>
+                        <span class="feature-text">预测 vs 实际对比<br>发现自己对宠物的认知偏差</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">🧠</span>
+                        <span class="feature-text">12个行为测试<br>在家就能完成的科学测试</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">💡</span>
+                        <span class="feature-text">深度洞察<br>了解宠物独特的认知世界</span>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <p class="cta-text">准备好了解你的毛孩子了吗？</p>
+                    <button class="btn btn-white" onclick="startPrediction()">开始测试</button>
+                </div>
+
+                <div class="host-guide">
+                    <h3>🌐 如何在线访问这个测试？</h3>
+                    <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                        你可以将这个HTML文件上传到以下免费平台，创建在线链接：
+                    </p>
+                    <div class="online-platforms">
+                        <div class="platform-card">
+                            <div class="platform-icon">📦</div>
+                            <div class="platform-name">GitHub Pages</div>
+                            <div class="platform-desc">免费稳定，适合长期使用</div>
+                            <a href="https://pages.github.com/" target="_blank" class="platform-link">前往</a>
+                        </div>
+                        <div class="platform-card">
+                            <div class="platform-icon">🚀</div>
+                            <div class="platform-name">Netlify</div>
+                            <div class="platform-desc">拖拽即可部署，自动生成链接</div>
+                            <a href="https://app.netlify.com/drop" target="_blank" class="platform-link">前往</a>
+                        </div>
+                        <div class="platform-card">
+                            <div class="platform-icon">▲</div>
+                            <div class="platform-name">Vercel</div>
+                            <div class="platform-desc">快速部署，全球CDN加速</div>
+                            <a href="https://vercel.com" target="_blank" class="platform-link">前往</a>
+                        </div>
+                        <div class="platform-card">
+                            <div class="platform-icon">✏️</div>
+                            <div class="platform-name">CodePen</div>
+                            <div class="platform-desc">在线编辑，即时预览分享</div>
+                            <a href="https://codepen.io" target="_blank" class="platform-link">前往</a>
+                        </div>
+                    </div>
+                    <ol style="margin-top: 20px;">
+                        <li><strong>Netlify（最简单）</strong>：访问 <a href="https://app.netlify.com/drop" target="_blank">app.netlify.com/drop</a>，直接拖拽这个HTML文件即可获得链接</li>
+                        <li><strong>CodePen</strong>：打开 <a href="https://codepen.io" target="_blank">codepen.io</a>，粘贴HTML代码，即可分享链接</li>
+                        <li><strong>GitHub Pages</strong>：上传到GitHub仓库，开启Pages功能</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="step" id="predictionStep">
+                <h2 class="section-title">🔮 预测阶段</h2>
+                <p class="section-subtitle">
+                    在测试之前，先写下你对宠物的判断<br>
+                    看看你的直觉是否准确
+                </p>
+
+                <div id="predictionQuestions"></div>
+
+                <button class="btn" id="predictionNextBtn" onclick="startTests()" disabled>开始行为测试 →</button>
+            </div>
+
+            <div class="step" id="testStep">
+                <div class="test-start">
+                    <div class="test-number" id="testNumber">1</div>
+                    <h3 class="section-title" id="testTitle"></h3>
+                </div>
+
+                <div id="testContent"></div>
+
+                <button class="btn" id="testNextBtn" onclick="nextTest()" disabled>下一题 →</button>
+            </div>
+
+            <div class="step" id="resultStep">
+                <h2 class="section-title">🐾 你的宠物认知画像</h2>
+                <div id="resultContent"></div>
+
+                <div class="share-card" id="shareCard">
+                    <p class="share-quote" id="shareQuote"></p>
+                    <p class="share-type" id="shareType"></p>
+                    <div class="share-actions">
+                        <button class="share-btn" onclick="copyShare()">📋 复制文案</button>
+                        <button class="share-btn" onclick="shareToFriends()">💬 分享给朋友</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="restartTest()">重新测试</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            🐾 宠物性格测试 · 让爱更懂彼此
+        </div>
+    </div>
+
+    <script>
+        const predictionQuestions = [
+            {
+                dimension: '信息获取',
+                question: '你觉得你的宠物更依赖哪种感官认识世界？',
+                options: [
+                    { value: '嗅觉', label: 'A. 嗅觉（闻气味）' },
+                    { value: '视觉', label: 'B. 视觉（看东西）' }
+                ]
+            },
+            {
+                dimension: '社会依赖',
+                question: '你觉得你的宠物在陌生环境中会怎么做？',
+                options: [
+                    { value: '依赖主人', label: 'A. 紧紧跟着我' },
+                    { value: '独立探索', label: 'B. 自己先去探索' }
+                ]
+            },
+            {
+                dimension: '决策方式',
+                question: '当看到食物时，你觉得你的宠物会？',
+                options: [
+                    { value: '冲动型', label: 'A. 立刻冲过去' },
+                    { value: '克制型', label: 'B. 先观察再行动' }
+                ]
+            },
+            {
+                dimension: '行动动机',
+                question: '面对新事物，你觉得你的宠物会？',
+                options: [
+                    { value: '探索型', label: 'A. 充满好奇，立刻接近' },
+                    { value: '谨慎型', label: 'B. 小心翼翼，先观察' }
+                ]
+            }
+        ];
+
+        const behaviorTests = [
+            {
+                dimension: '信息获取',
+                dimensionKey: 'sensory',
+                icon: '👃',
+                title: '测试1：气味优先实验',
+                steps: [
+                    '准备两个容器（A和B）',
+                    '在A容器中放入零食',
+                    '用手只触摸B容器',
+                    '让宠物选择'
+                ],
+                observation: '观察宠物选择哪个容器',
+                options: [
+                    { value: '嗅觉', label: '选择了A（零食容器）', score: 2 },
+                    { value: '混合', label: '犹豫后选择A', score: 1 },
+                    { value: '视觉', label: '选择了B（人类气味）', score: 0 }
+                ]
+            },
+            {
+                dimension: '信息获取',
+                dimensionKey: 'sensory',
+                icon: '👀',
+                title: '测试2：视觉指示实验',
+                steps: [
+                    '准备两个不透明杯子',
+                    '把零食放入其中一个杯子',
+                    '用手指向有零食的杯子',
+                    '观察宠物是否跟随指示'
+                ],
+                observation: '宠物是否按照你的手指方向选择？',
+                options: [
+                    { value: '视觉', label: '立刻跟随手指选择', score: 2 },
+                    { value: '混合', label: '犹豫后选择对的', score: 1 },
+                    { value: '嗅觉', label: '自己闻后再选择', score: 0 }
+                ]
+            },
+            {
+                dimension: '信息获取',
+                dimensionKey: 'sensory',
+                icon: '👂',
+                title: '测试3：声音定位实验',
+                steps: [
+                    '在宠物看不到的地方',
+                    '摇动零食袋或发出声音',
+                    '观察宠物的反应'
+                ],
+                observation: '记录宠物的反应时间',
+                options: [
+                    { value: '听觉', label: '立刻转头/起身定位', score: 2 },
+                    { value: '混合', label: '犹豫后定位', score: 1 },
+                    { value: '其他', label: '没有明显反应', score: 0 }
+                ]
+            },
+            {
+                dimension: '社会依赖',
+                dimensionKey: 'social',
+                icon: '🤝',
+                title: '测试4：求助行为实验',
+                steps: [
+                    '准备一个打不开的零食容器',
+                    '当着宠物的面放入零食',
+                    '把容器递给宠物',
+                    '观察它的第一反应'
+                ],
+                observation: '宠物会向你求助还是自己尝试？',
+                options: [
+                    { value: '依赖主人', label: '立刻看向你求助', score: 2 },
+                    { value: '混合', label: '尝试后看向你', score: 1 },
+                    { value: '独立', label: '自己反复尝试', score: 0 }
+                ]
+            },
+            {
+                dimension: '社会依赖',
+                dimensionKey: 'social',
+                icon: '👁️',
+                title: '测试5：目光追随实验',
+                steps: [
+                    '让宠物处于放松状态',
+                    '你看向房间某个方向（不说话）',
+                    '观察宠物的反应'
+                ],
+                observation: '宠物是否跟随你的视线方向？',
+                options: [
+                    { value: '依赖主人', label: '立刻跟随视线', score: 2 },
+                    { value: '混合', label: '犹豫后跟随', score: 1 },
+                    { value: '独立', label: '没有跟随，继续做自己的事', score: 0 }
+                ]
+            },
+            {
+                dimension: '社会依赖',
+                dimensionKey: 'social',
+                icon: '🚪',
+                title: '测试6：分离反应实验',
+                steps: [
+                    '正常状态下观察宠物',
+                    '你离开房间（不告别）',
+                    '观察宠物立刻的反应'
+                ],
+                observation: '记录宠物对你离开的反应',
+                options: [
+                    { value: '依赖主人', label: '立刻跟随或焦虑', score: 2 },
+                    { value: '混合', label: '稍后才反应', score: 1 },
+                    { value: '独立', label: '继续待着，好像没注意到', score: 0 }
+                ]
+            },
+            {
+                dimension: '决策方式',
+                dimensionKey: 'decision',
+                icon: '⏰',
+                title: '测试7：延迟满足实验',
+                steps: [
+                    '给宠物一个小零食',
+                    '拿着更大的零食让它看到',
+                    '让它等待10秒',
+                    '记录宠物的表现'
+                ],
+                observation: '宠物能等待吗？能等多久？',
+                options: [
+                    { value: '克制型', label: '等待10秒以上', score: 2 },
+                    { value: '混合', label: '等待3-10秒', score: 1 },
+                    { value: '冲动型', label: '立刻吃掉或放弃等待', score: 0 }
+                ]
+            },
+            {
+                dimension: '决策方式',
+                dimensionKey: 'decision',
+                icon: '✋',
+                title: '测试8：选择抑制实验',
+                steps: [
+                    '手里握着宠物喜欢的零食',
+                    '张开手让它看到',
+                    '不允许它拿，说"不行"',
+                    '观察它的反应'
+                ],
+                observation: '宠物能克制住吗？',
+                options: [
+                    { value: '克制型', label: '立刻停止，等待指令', score: 2 },
+                    { value: '混合', label: '犹豫后停止', score: 1 },
+                    { value: '冲动型', label: '不断尝试拿取', score: 0 }
+                ]
+            },
+            {
+                dimension: '决策方式',
+                dimensionKey: 'decision',
+                icon: '🎾',
+                title: '测试9：刺激反应实验',
+                steps: [
+                    '准备一个宠物感兴趣的玩具',
+                    '把它丢出去',
+                    '立刻说"不行"',
+                    '观察宠物的反应'
+                ],
+                observation: '宠物能克制追玩具的冲动吗？',
+                options: [
+                    { value: '克制型', label: '立刻停止，看着你', score: 2 },
+                    { value: '混合', label: '犹豫后停下', score: 1 },
+                    { value: '冲动型', label: '立刻追出去', score: 0 }
+                ]
+            },
+            {
+                dimension: '行动动机',
+                dimensionKey: 'motivation',
+                icon: '🆕',
+                title: '测试10：新物探索实验',
+                steps: [
+                    '准备一个宠物没见过的新物品',
+                    '放在宠物附近',
+                    '观察它的第一反应'
+                ],
+                observation: '宠物如何接近新物品？',
+                options: [
+                    { value: '探索型', label: '立刻主动接近嗅闻', score: 2 },
+                    { value: '混合', label: '观察一会儿后接近', score: 1 },
+                    { value: '谨慎型', label: '保持距离或回避', score: 0 }
+                ]
+            },
+            {
+                dimension: '行动动机',
+                dimensionKey: 'motivation',
+                icon: '🍖',
+                title: '测试11：食物vs探索选择',
+                steps: [
+                    '一边放零食',
+                    '另一边放一个新奇物品',
+                    '让宠物自己选择'
+                ],
+                observation: '宠物会先选择哪个？',
+                options: [
+                    { value: '探索型', label: '先探索新物品', score: 2 },
+                    { value: '混合', label: '两个都看了看', score: 1 },
+                    { value: '奖励型', label: '直奔零食', score: 0 }
+                ]
+            },
+            {
+                dimension: '行动动机',
+                dimensionKey: 'motivation',
+                icon: '🔄',
+                title: '测试12：重复行为实验',
+                steps: [
+                    '做一个简单的指令（如坐下）',
+                    '不给零食奖励',
+                    '重复几次',
+                    '观察宠物的反应'
+                ],
+                observation: '宠物会继续配合吗？',
+                options: [
+                    { value: '奖励型', label: '做几次后停止，等待奖励', score: 2 },
+                    { value: '混合', label: '犹豫但继续', score: 1 },
+                    { value: '探索型', label: '继续配合，似乎享受互动', score: 0 }
+                ]
+            }
+        ];
+
+        let currentTestIndex = 0;
+        let predictions = {};
+        let testAnswers = {};
+        let scores = {
+            sensory: { '嗅觉': 0, '视觉': 0, '听觉': 0, '混合': 0 },
+            social: { '依赖主人': 0, '独立': 0, '混合': 0 },
+            decision: { '冲动型': 0, '克制型': 0, '混合': 0 },
+            motivation: { '探索型': 0, '谨慎型': 0, '奖励型': 0 }
+        };
+
+        function showStep(stepId) {
+            document.querySelectorAll('.step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.getElementById(stepId).classList.add('active');
+        }
+
+        function updateProgress(current, total, text) {
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            progressBar.style.display = 'block';
+            progressText.style.display = 'block';
+
+            const percentage = (current / total) * 100;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = text;
+        }
+
+        function startPrediction() {
+            showStep('predictionStep');
+            renderPredictionQuestions();
+        }
+
+        function renderPredictionQuestions() {
+            const container = document.getElementById('predictionQuestions');
+            container.innerHTML = predictionQuestions.map((q, index) => `
+                <div class="question">
+                    <p class="question-text">${index + 1}. ${q.question}</p>
+                    <div class="options">
+                        ${q.options.map(opt => `
+                            <div class="option" onclick="selectPrediction(${index}, '${opt.value}', this)">
+                                ${opt.label}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectPrediction(index, value, element) {
+            const questionDiv = element.parentElement.parentElement;
+            questionDiv.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+
+            predictions[predictionQuestions[index].dimension] = value;
+
+            const allAnswered = predictionQuestions.every((q, i) => predictions[q.dimension]);
+            document.getElementById('predictionNextBtn').disabled = !allAnswered;
+        }
+
+        function startTests() {
+            currentTestIndex = 0;
+            showStep('testStep');
+            renderTest(currentTestIndex);
+        }
+
+        function renderTest(index) {
+            const test = behaviorTests[index];
+            
+            document.getElementById('testNumber').textContent = index + 1;
+            document.getElementById('testTitle').textContent = test.title;
+
+            updateProgress(index + 1, behaviorTests.length, `测试 ${index + 1} / ${behaviorTests.length}`);
+
+            const content = `
+                <div class="test-card">
+                    <div class="test-title">
+                        <span class="test-icon">${test.icon}</span>
+                        <span>${test.dimension}</span>
+                    </div>
+                    <div class="test-steps">
+                        <h4>📋 测试步骤：</h4>
+                        <ol>
+                            ${test.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                    </div>
+                    <div class="test-observation">
+                        <h4>👀 观察要点：</h4>
+                        <p>${test.observation}</p>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <p class="question-text">你的宠物表现如何？</p>
+                    <div class="options">
+                        ${test.options.map((opt, i) => `
+                            <div class="option" onclick="selectTestAnswer(${index}, '${opt.value}', ${opt.score}, '${test.dimensionKey}', this)">
+                                ${opt.label}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('testContent').innerHTML = content;
+            document.getElementById('testNextBtn').disabled = true;
+            document.getElementById('testNextBtn').textContent = index === behaviorTests.length - 1 ? '查看结果 →' : '下一题 →';
+        }
+
+        function selectTestAnswer(testIndex, value, score, dimensionKey, element) {
+            element.parentElement.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+
+            testAnswers[testIndex] = { value, score, dimensionKey };
+
+            scores[dimensionKey][value] = Math.max(scores[dimensionKey][value], score);
+
+            document.getElementById('testNextBtn').disabled = false;
+        }
+
+        function nextTest() {
+            currentTestIndex++;
+
+            if (currentTestIndex >= behaviorTests.length) {
+                generateResult();
+            } else {
+                renderTest(currentTestIndex);
+            }
+        }
+
+        function generateResult() {
+            showStep('resultStep');
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('progressText').style.display = 'none';
+
+            const finalScores = {
+                sensory: getMaxKey(scores.sensory),
+                social: getMaxKey(scores.social),
+                decision: getMaxKey(scores.decision),
+                motivation: getMaxKey(scores.motivation)
+            };
+
+            const typeNames = {
+                sensory: {
+                    '嗅觉': '嗅觉探索型',
+                    '视觉': '视觉导向型',
+                    '听觉': '听觉敏锐型',
+                    '混合': '多元感知型'
+                },
+                social: {
+                    '依赖主人': '社交依赖型',
+                    '独立': '独立自主型',
+                    '混合': '平衡社交型'
+                },
+                decision: {
+                    '冲动型': '即时行动型',
+                    '克制型': '深思熟虑型',
+                    '混合': '灵活决策型'
+                },
+                motivation: {
+                    '探索型': '好奇驱动型',
+                    '谨慎型': '安全优先型',
+                    '奖励型': '激励响应型'
+                }
+            };
+
+            const mainType = typeNames.sensory[finalScores.sensory];
+            const shortType = finalScores.sensory === '嗅觉' ? '嗅觉探索型' :
+                             finalScores.sensory === '视觉' ? '视觉导向型' :
+                             finalScores.social === '独立' ? '独立决策者' :
+                             finalScores.motivation === '探索型' ? '好奇探险家' : '综合型';
+
+            const summaries = {
+                '嗅觉探索型': '它理解世界的方式，和你完全不同。',
+                '视觉导向型': '它更相信眼睛看到的一切。',
+                '独立决策者': '它有自己的判断，不需要你的指令。',
+                '好奇探险家': '世界那么大，它想去看看。',
+                '综合型': '它的世界复杂而有趣，等待你去发现。'
+            };
+
+            let resultHTML = `
+                <div class="result-card">
+                    <div class="result-icon">🐾</div>
+                    <p class="result-type">${shortType}</p>
+                    <p class="result-summary">${summaries[shortType]}</p>
+                </div>
+
+                <div class="insight-box">
+                    <p class="insight-title">💡 核心洞察</p>
+                    <p class="insight-text" id="insightText"></p>
+                </div>
+
+                <h3 style="text-align: center; margin: 30px 0 20px; color: #333;">📊 四维分析</h3>
+
+                <div class="dimension-card">
+                    <p class="dimension-title">🧠 信息获取方式</p>
+                    <p class="dimension-result">更偏：${finalScores.sensory}</p>
+                    <p class="dimension-explanation">
+                        ${getSensoryExplanation(finalScores.sensory)}
+                    </p>
+                </div>
+
+                <div class="dimension-card">
+                    <p class="dimension-title">🤝 社会依赖程度</p>
+                    <p class="dimension-result">更偏：${finalScores.social}</p>
+                    <p class="dimension-explanation">
+                        ${getSocialExplanation(finalScores.social)}
+                    </p>
+                </div>
+
+                <div class="dimension-card">
+                    <p class="dimension-title">⚡ 决策方式</p>
+                    <p class="dimension-result">更偏：${finalScores.decision}</p>
+                    <p class="dimension-explanation">
+                        ${getDecisionExplanation(finalScores.decision)}
+                    </p>
+                </div>
+
+                <div class="dimension-card">
+                    <p class="dimension-title">🏹 行动动机</p>
+                    <p class="dimension-result">更偏：${finalScores.motivation}</p>
+                    <p class="dimension-explanation">
+                        ${getMotivationExplanation(finalScores.motivation)}
+                    </p>
+                </div>
+
+                <div class="comparison-section">
+                    <h3 class="comparison-title">🎯 你以为 vs 实际</h3>
+                    <div id="comparisonResults"></div>
+                </div>
+            `;
+
+            document.getElementById('resultContent').innerHTML = resultHTML;
+
+            document.getElementById('insightText').textContent = getInsightText(finalScores);
+
+            renderComparison(finalScores);
+
+            document.getElementById('shareQuote').textContent = summaries[shortType];
+            document.getElementById('shareType').textContent = `🐾 ${shortType}`;
+        }
+
+        function getMaxKey(obj) {
+            return Object.keys(obj).reduce((a, b) => obj[a] > obj[b] ? a : b);
+        }
+
+        function getSensoryExplanation(type) {
+            const explanations = {
+                '嗅觉': '对气味的敏感度高于视觉和语言。它闻到的世界比看到的更真实。',
+                '视觉': '更依赖视觉信息。对手势、表情的响应比对语言更快。',
+                '听觉': '对声音非常敏感。可能是家里第一个注意到电话响的。',
+                '混合': '综合运用多种感官，有自己独特的认知方式。'
+            };
+            return explanations[type];
+        }
+
+        function getSocialExplanation(type) {
+            const explanations = {
+                '依赖主人': '与你建立了强烈的情感纽带，需要更多的陪伴。',
+                '独立': '有很强的自主性，能独立思考和行动。',
+                '混合': '在依赖和独立之间找到了平衡。'
+            };
+            return explanations[type];
+        }
+
+        function getDecisionExplanation(type) {
+            const explanations = {
+                '冲动型': '行动迅速，反应敏捷。但可能需要更多训练来学会等待。',
+                '克制型': '能够控制冲动，会先思考再行动。这是自控力的表现。',
+                '混合': '根据情况灵活调整自己的行为策略。'
+            };
+            return explanations[type];
+        }
+
+        function getMotivationExplanation(type) {
+            const explanations = {
+                '探索型': '对新事物充满好奇，探索欲望强烈。这让它更可能发现有趣的东西。',
+                '谨慎型': '在行动前会仔细评估风险，更注重安全感。',
+                '奖励型': '对奖励敏感，这使得正向训练对它特别有效。'
+            };
+            return explanations[type];
+        }
+
+        function getInsightText(finalScores) {
+            if (finalScores.sensory === '嗅觉') {
+                return '它不是不听话，而是它更相信自己闻到的世界。当你觉得它"无视"你时，它可能只是在认真分析周围的气味。';
+            } else if (finalScores.social === '独立') {
+                return '它不是冷漠，而是在用自己的方式爱你。独立型宠物往往更有自信，也更需要尊重它的选择。';
+            } else if (finalScores.decision === '冲动型') {
+                return '它不是故意捣乱，只是行动比思考快。给它更多的耐心和训练时间，它会学会更好的控制自己。';
+            } else {
+                return '它的世界比你想象的更丰富。了解它的真实性格，才能建立更深的默契。';
+            }
+        }
+
+        function renderComparison(finalScores) {
+            const comparisonHTML = Object.keys(predictions).map((dimension, index) => {
+                const prediction = predictions[dimension];
+                let actual = '';
+                let dimensionKey = '';
+
+                switch(dimension) {
+                    case '信息获取':
+                        actual = finalScores.sensory;
+                        dimensionKey = 'sensory';
+                        break;
+                    case '社会依赖':
+                        actual = finalScores.social;
+                        dimensionKey = 'social';
+                        break;
+                    case '决策方式':
+                        actual = finalScores.decision;
+                        dimensionKey = 'decision';
+                        break;
+                    case '行动动机':
+                        actual = finalScores.motivation;
+                        dimensionKey = 'motivation';
+                        break;
+                }
+
+                const isMatch = prediction === actual || 
+                               (prediction === '混合' || actual === '混合') ||
+                               (dimension === '决策方式' && prediction === '冲动型' && actual === '冲动型');
+
+                return `
+                    <div class="comparison-item">
+                        <span class="comparison-label">${dimension}</span>
+                        <div class="comparison-values">
+                            <div class="comparison-box ${isMatch ? 'match' : 'different'}">
+                                ${isMatch ? '✓ 预测准确' : '↔️ 有偏差'}
+                            </div>
+                            <div class="comparison-box actual-box">
+                                ${actual}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('comparisonResults').innerHTML = comparisonHTML;
+        }
+
+        function copyShare() {
+            const quote = document.getElementById('shareQuote').textContent;
+            const type = document.getElementById('shareType').textContent;
+            const text = `${type}\n\n"${quote}"\n\n🐾 测测你家毛孩子是什么性格？`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('已复制到剪贴板！');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制');
+            });
+        }
+
+        function shareToFriends() {
+            const quote = document.getElementById('shareQuote').textContent;
+            const type = document.getElementById('shareType').textContent;
+            const text = `🐾 ${type}\n\n"${quote}"\n\n快来测试你家毛孩子的性格吧！`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: '宠物性格测试',
+                    text: text,
+                    url: window.location.href
+                }).catch(err => {
+                    console.log('分享取消');
+                });
+            } else {
+                copyShare();
+            }
+        }
+
+        function restartTest() {
+            predictions = {};
+            testAnswers = {};
+            scores = {
+                sensory: { '嗅觉': 0, '视觉': 0, '听觉': 0, '混合': 0 },
+                social: { '依赖主人': 0, '独立': 0, '混合': 0 },
+                decision: { '冲动型': 0, '克制型': 0, '混合': 0 },
+                motivation: { '探索型': 0, '谨慎型': 0, '奖励型': 0 }
+            };
+            currentTestIndex = 0;
+
+            document.getElementById('progressBar').style.display = 'none';
+            document.getElementById('progressText').style.display = 'none';
+            showStep('introStep');
+        }
+    </script>
+</body>
+</html>
